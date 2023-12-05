@@ -1,0 +1,103 @@
+{% extends 'blog/layouts.html' %}
+
+{% block css %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .container-home {
+        max-width: 800px;
+        margin: auto;
+        margin-top: 50px;
+    }
+
+    .blog-entry {
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #ffffff;
+    }
+
+    .blog-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .blog-author-date {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .like-dislike {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+
+    .tags {
+        margin: 5px 0;
+    }
+
+    .tag-badge {
+        margin-right: 5px;
+        font-size: 0.8rem;
+    }
+
+    .search-container {
+        margin-bottom: 20px;
+    }
+
+    .sort {
+        text-align: end;
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container container-home">
+    <div class="search-container">
+        <form method="get">
+            <div class="input-group mb-3">
+
+                <input type="text" class="form-control w-75" placeholder="Search blogs" aria-label="Search blogs" aria-describedby="search-btn" value="{{query}}" name="query">
+                <select class="form-select" id="searchTypeDropdown" name="type">
+                    <option value="title" {% if type == "title" %} selected {% endif %}>Title</option>
+                    <option value="tags" {% if type == "tags" %} selected {% endif %}>Tags</option>
+                </select>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-primary" type="submit" id="search-btn">Search</button>
+                </div>
+            </div>
+            <div class="row mb-3 w-100 ml-auto">
+                <label for="sortDropdown" class="form-label col-9 sort mt-2">Sort by:</label>
+                <div class="col-3">
+                    <select class="form-select" id="sortDropdown" name="sort" onchange="this.form.submit()">
+                        <option value="latest" {% if sort == "latest" %} selected {% endif %}>Latest</option>
+                        <option value="relevance" {% if sort == "relevance" %} selected {% endif %}>Relevance</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% for blog in blogs %}
+    <div class="blog-entry">
+        <div class="blog-title d-inline">{{blog.title}}</div>
+        <div class="blog-author-date">By {{blog.user.get_full_name}} | {{blog.timestamp}}</div>
+        <div class="tags">
+            {% load tags_filter %}
+            {% for tag in blog.tags|splitter %}
+            <span class="badge bg-secondary tag-badge">{{tag}}</span>
+            {% endfor %}
+        </div>
+        <p class="blog-content">
+            {{ blog.content }}
+        </p>
+    </div>
+    {% empty %}
+    <h3 style="text-align: center;">No Blogs</h3>
+    {% endfor %}
+</div>
+{% endblock %}

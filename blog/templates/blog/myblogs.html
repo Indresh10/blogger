@@ -1,0 +1,151 @@
+{% extends 'blog/layouts.html' %}
+
+{% block css %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .container-myblogs {
+        max-width: 800px;
+        margin: auto;
+        margin-top: 50px;
+    }
+
+    .blog-entry {
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #ffffff;
+    }
+
+    .blog-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .like-dislike {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    .tags {
+        margin-top: 10px;
+    }
+
+    .tag-badge {
+        margin-right: 5px;
+        font-size: 0.8rem;
+    }
+
+    .myblogs-actions {
+        margin-top: 10px;
+    }
+
+    .btn-edit {
+        margin-right: 5px;
+    }
+
+    .search-container {
+        margin-bottom: 20px;
+    }
+
+</style>
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .container-myblogs {
+        max-width: 800px;
+        margin: auto;
+        margin-top: 50px;
+    }
+
+    .blog-entry {
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #ffffff;
+    }
+
+    .blog-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .tags {
+        margin: 5px 0;
+    }
+
+    .tag-badge {
+        margin-right: 5px;
+        font-size: 0.8rem;
+    }
+
+    .myblogs-actions {
+        margin-top: 10px;
+        text-align: end;
+    }
+
+    .btn-edit {
+        margin-right: 5px;
+    }
+
+    .search-container {
+        margin-bottom: 20px;
+    }
+
+    .btn-bottom {
+        margin: 0 -5px -2px 0;
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container container-myblogs">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{% if message.tags == 'error' %}danger {% else %}{{message.tags}} {% endif %} alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <h2 class="text-center">
+        <a href="{% url 'blog:index' %}" class="text-decoration-none me-4">&lt;-</a>My Blogs
+    </h2>
+
+    <!-- Example blog entry 1 -->
+    {% for blog in blogs %}
+    <div class="blog-entry">
+        <div class="blog-title">{{blog.title}}</div>
+        <div class="tags">
+            {% load tags_filter %}
+            {% for tag in blog.tags|splitter %}
+            <span class="badge bg-secondary tag-badge">{{tag}}</span>
+            {% endfor %}
+        </div>
+        <p class="blog-content">
+            {{ blog.content }}
+        </p>
+        <div class="myblogs-actions">
+            <a class="btn btn-warning btn-edit" href="{% url 'blog:edit' blog.pk %}">Edit</a>
+            <form method="post" action="{% url 'blog:delete' %}" class="d-inline" onsubmit="return confirm('Are you Sure?')">
+                {% csrf_token %}
+                <input type="hidden" value="{{blog.pk}}" name="pk">
+                <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+        </div>
+    </div>
+    {% empty %}
+    <h3 style=" text-align: center; display: block;">No blogs created till now</h3>
+    {% endfor %}
+</div>
+<div class="fixed-bottom d-flex justify-content-end">
+    <a href="{% url 'blog:addblog' %}" class="btn btn-primary btn-bottom">Create Post</a>
+</div>
+{% endblock %}

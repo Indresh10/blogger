@@ -1,0 +1,91 @@
+{% extends 'blog/layouts.html' %}
+{% block css %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .login-container {
+        max-width: 400px;
+        margin: auto;
+        margin-top: 100px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+        color: #007bff;
+    }
+
+    .form-control {
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
+
+    .form-floating {
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    a {
+        color: #007bff;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container login-container">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Login</h3>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger {% else %}{{message.tags}} {% endif %} alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            <form method="post" action="{% url 'blog:login' %}">
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                    <input class="form-control" id="username" placeholder="name" required name="username">
+                    <label for="username">Username</label>
+                </div>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password" required name="password">
+                    <label for="floatingPassword">Password</label>
+                </div>
+                <div class="mb-3 text-center">
+                    <a href="{% url 'blog:register' %}" class="text-decoration-none">Don't have an account? Register here</a>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+            <div class="mb-3 mt-3 text-center">
+                <a href="{% url 'blog:index' %}" class="text-decoration-none">&lt; Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

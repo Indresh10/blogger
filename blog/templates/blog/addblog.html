@@ -1,0 +1,88 @@
+{% extends 'blog/layouts.html' %}
+
+{% block css %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .container-add-blog {
+        max-width: 600px;
+        margin: auto;
+        margin-top: 50px;
+    }
+
+    .form-container {
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        padding: 20px;
+        background-color: #ffffff;
+    }
+
+    .form-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        margin-bottom: 1.5rem;
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container container-add-blog">
+    <div class="form-container">
+        <h2 class="form-title">Add Blog Post</h2>
+        <form method="post" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="blogTitle" class="form-label">Title (max 100 characters):</label>
+                <input type="text" class="form-control" id="blogTitle" name="title" maxlength="100" required value="{{post.title}}">
+            </div>
+            <div class="mb-3">
+                <label for="blogTags" class="form-label">Tags (max 100 characters, use comma to separate tags):</label>
+                <input type="text" class="form-control" id="blogTags" name="tags" maxlength="100" required value="{{post.tags}}">
+            </div>
+            <div class="mb-3">
+                <label for="blogContent" class="form-label">Content (max 300 words):</label>
+                <textarea class="form-control" id="blogContent" name="content" rows="6" maxlength="300" required>{{post.content}}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="{% url 'blog:myblogs' %}" class="btn btn-danger">Cancel</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        var title = document.getElementById('blogTitle').value;
+        var tags = document.getElementById('blogTags').value;
+        var content = document.getElementById('blogContent').value;
+
+        if (title.length > 100) {
+            alert('Title must be up to 100 characters.');
+            return false;
+        }
+
+        if (tags.length > 100) {
+            alert('Tags must be up to 100 characters.');
+            return false;
+        }
+
+        var wordCount = content.split(/\s+/).length;
+        if (wordCount > 300) {
+            alert('Content must be up to 300 words.');
+            return false;
+        }
+
+        return true;
+    }
+</script>
+{% endblock %}
