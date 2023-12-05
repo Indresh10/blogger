@@ -102,5 +102,5 @@ The Blogging Platform is a Django-based web application that enables users to re
 
 ### Deployment
 
-- Host the application on a platform like Heroku or AWS.
-- Provide the link to access the live application.
+- Application is hosted on Vercel with backend on supabase.
+- link is given in the description
